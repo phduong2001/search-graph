@@ -181,9 +181,34 @@ def GBFS(matrix, start, end):
     path: list
         Founded path
     """
-    # TODO: 
+    # TODO:
+
     path = []
-    visited = {}
+    visited = {start: -1}
+
+    queue = [(0, start)]
+
+    while queue:
+        queue = sorted(queue)
+        p = queue.pop()
+
+        if p[1] == end:
+            break
+
+        for i in range(0, matrix.shape[1]):
+            if matrix[p[1], i] != 0:
+                if i not in visited:
+                    queue.append((matrix[p[1], i], i))
+                    visited[i] = p[1]
+
+    temp = end
+    while temp != -1:
+        path.append(temp)
+        temp = visited[temp]
+    path.reverse()
+
+    print(visited, path)
+
     return visited, path
 
 
