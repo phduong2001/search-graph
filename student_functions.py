@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -233,7 +235,43 @@ def Astar(matrix, start, end, pos):
     path: list
         Founded path
     """
-    # TODO: 
+    # TODO:
+
+    def euclidean(point1, point2):
+        return math.sqrt((point2[0] - point1[0]) ** 2 + (point2[1] - point1[1]) ** 2)
+
     path = []
-    visited = {}
+    visited = {start: -1}
+
+    cost = 10 ** 8
+    queue = [[0, start]]
+
+    while queue:
+        queue = sorted(queue)
+        p = queue.pop()
+
+        p[0] *= -1
+
+        if p[1] == end:
+            cost = min(cost, p[0])
+            queue = sorted(queue)
+
+        for i in range(0, matrix.shape[1]):
+            if matrix[p[1], i] != 0:
+                distance = p[0] + matrix[p[1], i] + euclidean(pos[i], pos[end])
+                if i not in visited:
+                    queue.append([distance * -1, i])
+                    visited[i] = p[1]
+                if i == end and cost > distance:
+                    cost = distance
+                    visited[i] = p[1]
+
+    temp = end
+    while temp != -1:
+        path.append(temp)
+        temp = visited[temp]
+    path.reverse()
+
+    print(visited, path)
+
     return visited, path
